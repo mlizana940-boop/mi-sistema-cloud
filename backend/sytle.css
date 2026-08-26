@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500&display=swap');
+
+:root {
+  --forest-deep: #0d2b22;
+  --forest-mid: #163d31;
+  --forest-light: #1f5643;
+  --cream: #f4f1e9;
+  --accent-gold: #c9a86a;
+  --accent-gold-soft: #e2cf9e;
+  --text-muted: #cdd9d0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+  color: var(--cream);
+  background: radial-gradient(circle at 20% 15%, var(--forest-light) 0%, var(--forest-mid) 45%, var(--forest-deep) 100%);
+  background-attachment: fixed;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(226, 207, 158, 0.10), rgba(226, 207, 158, 0) 70%);
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+body::before {
+  width: 380px;
+  height: 380px;
+  top: -100px;
+  left: -120px;
+  animation: drift 22s ease-in-out infinite alternate;
+}
+
+body::after {
+  width: 260px;
+  height: 260px;
+  bottom: -80px;
+  right: -80px;
+  animation: drift 18s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes drift {
+  from { transform: translateX(0) translateY(0); }
+  to   { transform: translateX(40px) translateY(20px); }
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  background: rgba(244, 241, 233, 0.06);
+  border: 1px solid rgba(244, 241, 233, 0.16);
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  text-align: center;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.card img {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+  border-radius: 50%;
+  margin-bottom: 1.5rem;
+  background: var(--cream);
+  padding: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 2.1rem;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, var(--cream), var(--accent-gold-soft));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 500;
+  font-size: 1.05rem;
+  color: var(--accent-gold-soft);
+  margin-top: 0.5rem;
+  letter-spacing: 0.01em;
+}
+
+p {
+  margin-top: 1.4rem;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+button {
+  margin-top: 2.2rem;
+  padding: 0.85rem 2.2rem;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--forest-deep);
+  background: linear-gradient(90deg, var(--accent-gold-soft), var(--accent-gold));
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 8px 24px rgba(201, 168, 106, 0.35);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(201, 168, 106, 0.5);
+}
+
+button:focus-visible {
+  outline: 3px solid var(--cream);
+  outline-offset: 3px;
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before, body::after { animation: none; }
+}
+
+@media (max-width: 480px) {
+  .card { padding: 2.2rem 1.6rem; }
+  h1 { font-size: 1.7rem; }
+}
