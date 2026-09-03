@@ -74,6 +74,7 @@ function renderProducts() {
 
   filtered.forEach((p) => {
     const tr = document.createElement('tr');
+    tr.className = 'row-in';
 
     const btnEdit = document.createElement('button');
     btnEdit.className = 'btn small';
@@ -111,6 +112,7 @@ function renderSummary() {
 
   productos.forEach((p) => {
     const tr = document.createElement('tr');
+    tr.className = 'row-in';
 
     const minusBtn = document.createElement('button');
     minusBtn.className = 'btn qty-btn';

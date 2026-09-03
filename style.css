@@ -153,7 +153,7 @@ button:active {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body::before, body::after { animation: none; }
+  body::before, body::after, .panel, .stat-card, .data-table tr { animation: none !important; }
 }
 
 @media (max-width: 480px) {
@@ -205,6 +205,12 @@ button:active {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  animation: panelIn 0.4s ease both;
+}
+
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .panel h2 {
@@ -336,6 +342,23 @@ button:active {
   border-bottom: 1px solid rgba(244, 241, 233, 0.12);
 }
 
+.data-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.data-table tbody tr.row-in {
+  animation: rowIn 0.3s ease both;
+}
+
+@keyframes rowIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.data-table tbody tr:hover {
+  background: rgba(244, 241, 233, 0.05);
+}
+
 .data-table thead th {
   color: var(--accent-gold-soft);
   font-weight: 600;
@@ -378,7 +401,19 @@ button:active {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  animation: panelIn 0.4s ease both;
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-gold);
+}
+
+.stats-grid .stat-card:nth-child(1) { animation-delay: 0s; }
+.stats-grid .stat-card:nth-child(2) { animation-delay: 0.08s; }
+.stats-grid .stat-card:nth-child(3) { animation-delay: 0.16s; }
+.stats-grid .stat-card:nth-child(4) { animation-delay: 0.24s; }
 
 .stat-label {
   font-size: 0.8rem;
