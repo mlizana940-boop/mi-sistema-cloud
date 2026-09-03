@@ -549,3 +549,23 @@ button:active {
   gap: 0.75rem;
   margin-top: 1.4rem;
 }
+
+.app-footer {
+  text-align: center;
+  padding: 1.5rem 1rem 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  border-top: 1px solid rgba(244, 241, 233, 0.1);
+  margin-top: 1rem;
+}
+
+.app-footer p {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .app-page { padding: 1.5rem 0.8rem; }
+  .product-form { grid-template-columns: 1fr; }
+  .data-table { font-size: 0.82rem; }
+  .panel { padding: 1.1rem; }
+}
