@@ -209,10 +209,34 @@ button:active {
 
 .panel h2 {
   color: var(--accent-gold-soft);
-  margin-top: 0;
-  margin-bottom: 1rem;
+  margin: 0;
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 500;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.search-input {
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid rgba(244, 241, 233, 0.25);
+  background: rgba(244, 241, 233, 0.08);
+  color: var(--cream);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  min-width: 220px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--accent-gold);
 }
 
 .product-form {

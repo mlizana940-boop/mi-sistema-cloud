@@ -2,6 +2,9 @@ const STORAGE_KEY = 'productos';
 
 let productos = [];
 let editingId = null;
+let searchTerm = '';
+
+const searchInput = document.getElementById('search');
 
 const form = document.getElementById('product-form');
 const formTitle = document.getElementById('form-title');
@@ -60,12 +63,16 @@ function renderStats() {
 
 function renderProducts() {
   tbody.innerHTML = '';
-  if (productos.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" class="empty">No hay productos registrados.</td></tr>';
+  const filtered = productos.filter((p) =>
+    p.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" class="empty">No hay productos registrados' +
+      (searchTerm ? ' que coincidan con la búsqueda.' : '.') + '</td></tr>';
     return;
   }
 
-  productos.forEach((p) => {
+  filtered.forEach((p) => {
     const tr = document.createElement('tr');
 
     const btnEdit = document.createElement('button');
@@ -249,6 +256,11 @@ function buyProduct(p) {
 }
 
 cancelBtn.addEventListener('click', resetForm);
+
+searchInput.addEventListener('input', () => {
+  searchTerm = searchInput.value.trim();
+  renderProducts();
+});
 
 load();
 render();
