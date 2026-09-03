@@ -5,6 +5,7 @@ let editingId = null;
 let searchTerm = '';
 let stockFilter = 'all';
 let confirmPendingId = null;
+let buyPendingId = null;
 
 const searchInput = document.getElementById('search');
 const filterSelect = document.getElementById('filter-stock');
@@ -25,6 +26,12 @@ const confirmModal = document.getElementById('confirm-modal');
 const confirmText = document.getElementById('confirm-text');
 const confirmOk = document.getElementById('confirm-ok');
 const confirmCancel = document.getElementById('confirm-cancel');
+const buyModal = document.getElementById('buy-modal');
+const buyName = document.getElementById('buy-name');
+const buyQty = document.getElementById('buy-qty');
+const buyTotal = document.getElementById('buy-total');
+const buyOk = document.getElementById('buy-ok');
+const buyCancel = document.getElementById('buy-cancel');
 
 function load() {
   try {
@@ -116,8 +123,6 @@ function renderProducts() {
 }
 
 function renderSummary() {
-  const totals = summaryTbody.querySelector('.summary-total');
-  if (totals) totals.remove();
   summaryTbody.innerHTML = '';
   if (productos.length === 0) {
     summaryTbody.innerHTML = '<tr><td colspan="4" class="empty">No hay productos para resumir.</td></tr>';
@@ -283,12 +288,41 @@ function buyProduct(p) {
     showToast('Error: Stock insuficiente para comprar ' + qty + ' unidad(es) de "' + p.nombre + '". Stock disponible: ' + p.stock + '.', 'error');
     return;
   }
+  buyPendingId = p.id;
+  buyName.textContent = p.nombre;
+  buyQty.textContent = qty + (qty === 1 ? ' unidad' : ' unidades');
+  buyTotal.textContent = 'Total a pagar: ' + formatPrecio(Number(p.precio) * qty);
+  buyModal.hidden = false;
+}
+
+buyOk.addEventListener('click', () => {
+  const p = productos.find((x) => x.id === buyPendingId);
+  buyPendingId = null;
+  buyModal.hidden = true;
+  if (!p) return;
+  const qty = p._buyQty || 1;
+  if (qty > p.stock) {
+    showToast('Error: Stock insuficiente para comprar ' + qty + ' unidad(es) de "' + p.nombre + '".', 'error');
+    return;
+  }
   p.stock -= qty;
   p._buyQty = 1;
   persist();
   render();
   showToast('Has comprado ' + qty + ' unidad(es) de "' + p.nombre + '". Stock restante: ' + p.stock + '.', 'success');
-}
+});
+
+buyCancel.addEventListener('click', () => {
+  buyPendingId = null;
+  buyModal.hidden = true;
+});
+
+buyModal.addEventListener('click', (e) => {
+  if (e.target === buyModal) {
+    buyPendingId = null;
+    buyModal.hidden = true;
+  }
+});
 
 cancelBtn.addEventListener('click', resetForm);
 
