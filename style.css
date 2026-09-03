@@ -113,6 +113,39 @@ p {
   color: var(--text-muted);
 }
 
+.author-info {
+  margin-top: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  text-align: left;
+  background: rgba(244, 241, 233, 0.05);
+  border: 1px solid rgba(244, 241, 233, 0.12);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+}
+
+.author-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.author-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.author-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--accent-gold-soft);
+}
+
 button {
   margin-top: 2.2rem;
   padding: 0.85rem 2.2rem;
