@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500&display=swap');
 
+/* Colores del tema (verde bosque, crema y dorado) */
 :root {
   --forest-deep: #0d2b22;
   --forest-mid: #163d31;
@@ -10,12 +11,14 @@
   --text-muted: #cdd9d0;
 }
 
+/* Reinicia márgenes y bordes por defecto del navegador */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Fondo general de todas las páginas */
 body {
   min-height: 100vh;
   display: flex;
@@ -61,6 +64,7 @@ body::after {
   to   { transform: translateX(40px) translateY(20px); }
 }
 
+/* Tarjeta de la página de inicio */
 .card {
   position: relative;
   width: 100%;
@@ -194,6 +198,9 @@ button:active {
   h1 { font-size: 1.7rem; }
 }
 
+/* ===== Estilos de la página de gestión de productos ===== */
+
+/* Contenedor principal de la app (diferente a la tarjeta del inicio) */
 .app-page {
   display: block;
   align-items: flex-start;
@@ -229,6 +236,7 @@ button:active {
   text-decoration: underline;
 }
 
+/* Caja (panel) que agrupa cada sección de la página */
 .panel {
   background: rgba(244, 241, 233, 0.06);
   border: 1px solid rgba(244, 241, 233, 0.16);
@@ -288,6 +296,7 @@ button:active {
   max-width: 200px;
 }
 
+/* Formulario de creación/edición de productos */
 .product-form {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -368,6 +377,7 @@ button:active {
   box-shadow: none;
 }
 
+/* Tablas de datos */
 .table-wrap {
   overflow-x: auto;
 }
@@ -426,6 +436,7 @@ button:active {
   margin-top: 1rem;
 }
 
+/* Tarjetas de resumen estadístico */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -472,6 +483,7 @@ button:active {
   color: var(--accent-gold-soft);
 }
 
+/* Mensaje emergente (toast) de éxito o error */
 .toast {
   position: fixed;
   bottom: 20px;
@@ -540,6 +552,7 @@ button:active {
   color: #e07a6b;
 }
 
+/* Ventanas modales (confirmar eliminar y confirmar compra) */
 .modal {
   position: fixed;
   inset: 0;

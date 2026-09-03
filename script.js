@@ -1,12 +1,14 @@
 const STORAGE_KEY = 'productos';
 
+/* Estado de la app: lista de productos y variables de apoyo */
 let productos = [];
-let editingId = null;
-let searchTerm = '';
-let stockFilter = 'all';
-let confirmPendingId = null;
-let buyPendingId = null;
+let editingId = null;          // id del producto que se está editando (null = nuevo)
+let searchTerm = '';           // texto escrito en el buscador
+let stockFilter = 'all';       // filtro de stock seleccionado
+let confirmPendingId = null;   // producto pendiente de eliminar
+let buyPendingId = null;       // producto pendiente de comprar
 
+/* Referencias a los elementos del HTML que vamos a usar */
 const searchInput = document.getElementById('search');
 const filterSelect = document.getElementById('filter-stock');
 
@@ -33,6 +35,8 @@ const buyTotal = document.getElementById('buy-total');
 const buyOk = document.getElementById('buy-ok');
 const buyCancel = document.getElementById('buy-cancel');
 
+/* --- Guardar y cargar los productos --- */
+// Carga los productos guardados desde el navegador (localStorage)
 function load() {
   try {
     productos = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
@@ -41,14 +45,17 @@ function load() {
   }
 }
 
+// Guarda la lista de productos en el navegador
 function persist() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(productos));
 }
 
+// Da formato de pesos chilenos a un número (ej: $12.345)
 function formatPrecio(value) {
   return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(value);
 }
 
+// Muestra un mensaje temporal en pantalla (éxito o error)
 function showToast(message, type) {
   toast.textContent = message;
   toast.className = 'toast ' + type;
@@ -57,12 +64,15 @@ function showToast(message, type) {
   showToast._t = setTimeout(() => { toast.hidden = true; }, 3000);
 }
 
+// Redibuja toda la página (estadísticas, lista y resumen)
 function render() {
   renderStats();
   renderProducts();
   renderSummary();
 }
 
+/* --- Tarjetas de resumen --- */
+// Calcula y muestra total de productos, con stock, agotados y valor del inventario
 function renderStats() {
   const total = productos.length;
   const available = productos.filter((p) => p.stock > 0).length;
@@ -75,6 +85,7 @@ function renderStats() {
   document.getElementById('stat-value').textContent = formatPrecio(value);
 }
 
+// Indica si un producto cumple con el buscador y el filtro de stock
 function matchesFilters(p) {
   const matchesSearch = p.nombre.toLowerCase().includes(searchTerm.toLowerCase());
   if (!matchesSearch) return false;
@@ -84,6 +95,8 @@ function matchesFilters(p) {
   return true;
 }
 
+/* --- Tabla de productos (CRUD) --- */
+// Dibuja la tabla con todos los productos (filtrados por búsqueda/stock)
 function renderProducts() {
   tbody.innerHTML = '';
   const filtered = productos.filter(matchesFilters);
@@ -122,6 +135,8 @@ function renderProducts() {
   });
 }
 
+/* --- Tabla de resumen con compra --- */
+// Dibuja la tabla de resumen con stock y botón para comprar
 function renderSummary() {
   summaryTbody.innerHTML = '';
   if (productos.length === 0) {
@@ -173,6 +188,7 @@ function renderSummary() {
   });
 }
 
+// Aumenta o baja la cantidad a comprar de un producto (mínimo 1, máximo 99)
 function adjustBuyQty(id, delta) {
   const p = productos.find((x) => x.id === id);
   if (!p) return;
@@ -183,12 +199,15 @@ function adjustBuyQty(id, delta) {
   if (span) span.textContent = p._buyQty;
 }
 
+// Evita que el texto del usuario se interprete como HTML (seguridad)
 function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
 }
 
+/* --- Formulario: crear y editar --- */
+// Vacía el formulario y lo deja listo para crear un producto nuevo
 function resetForm() {
   editingId = null;
   idInput.value = '';
@@ -198,9 +217,11 @@ function resetForm() {
   cancelBtn.hidden = true;
 }
 
+// Al enviar el formulario: valida, y crea o modifica el producto
 form.addEventListener('submit', (e) => {
   e.preventDefault();
 
+  // Lee los valores de los campos del formulario
   const nombre = nombreInput.value.trim();
   const stock = Number(stockInput.value);
   const precio = Math.round(Number(precioInput.value));
@@ -237,6 +258,7 @@ form.addEventListener('submit', (e) => {
   render();
 });
 
+// Carga un producto en el formulario para poder editarlo
 function startEdit(id) {
   const p = productos.find((x) => x.id === id);
   if (!p) return;
@@ -253,6 +275,8 @@ function startEdit(id) {
   nombreInput.focus();
 }
 
+/* --- Eliminar producto --- */
+// Pide confirmación mostrando el modal antes de eliminar
 function deleteProduct(id) {
   const p = productos.find((x) => x.id === id);
   if (!p) return;
@@ -261,6 +285,7 @@ function deleteProduct(id) {
   confirmModal.hidden = false;
 }
 
+// Si acepta el modal, borra el producto y guarda los cambios
 confirmOk.addEventListener('click', () => {
   if (!confirmPendingId) return;
   productos = productos.filter((x) => x.id !== confirmPendingId);
@@ -283,6 +308,8 @@ confirmModal.addEventListener('click', (e) => {
   }
 });
 
+/* --- Comprar producto --- */
+// Abre el modal de compra mostrando cantidad y total; si falta stock muestra error
 function buyProduct(p) {
   const qty = p._buyQty || 1;
   if (p.stock <= 0 || qty > p.stock) {
@@ -327,15 +354,20 @@ buyModal.addEventListener('click', (e) => {
 
 cancelBtn.addEventListener('click', resetForm);
 
+/* --- Buscador y filtro --- */
+// Filtra los productos mientras el usuario escribe en el buscador
 searchInput.addEventListener('input', () => {
   searchTerm = searchInput.value.trim();
   renderProducts();
 });
 
+// Filtra los productos según el estado de stock elegido
 filterSelect.addEventListener('change', () => {
   stockFilter = filterSelect.value;
   renderProducts();
 });
 
+/* --- Arranque --- */
+// Al cargar la página: lee los productos guardados y los dibuja
 load();
 render();
