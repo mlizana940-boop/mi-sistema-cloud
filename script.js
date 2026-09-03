@@ -41,8 +41,21 @@ function showToast(message, type) {
 }
 
 function render() {
+  renderStats();
   renderProducts();
   renderSummary();
+}
+
+function renderStats() {
+  const total = productos.length;
+  const available = productos.filter((p) => p.stock > 0).length;
+  const out = productos.filter((p) => p.stock <= 0).length;
+  const value = productos.reduce((sum, p) => sum + Number(p.precio) * Number(p.stock), 0);
+
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-available').textContent = available;
+  document.getElementById('stat-out').textContent = out;
+  document.getElementById('stat-value').textContent = formatPrecio(value);
 }
 
 function renderProducts() {
