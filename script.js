@@ -4,6 +4,7 @@ let productos = [];
 let editingId = null;
 let searchTerm = '';
 let stockFilter = 'all';
+let confirmPendingId = null;
 
 const searchInput = document.getElementById('search');
 const filterSelect = document.getElementById('filter-stock');
@@ -20,6 +21,10 @@ const cancelBtn = document.getElementById('cancel-btn');
 const tbody = document.getElementById('product-tbody');
 const summaryTbody = document.getElementById('summary-tbody');
 const toast = document.getElementById('toast');
+const confirmModal = document.getElementById('confirm-modal');
+const confirmText = document.getElementById('confirm-text');
+const confirmOk = document.getElementById('confirm-ok');
+const confirmCancel = document.getElementById('confirm-cancel');
 
 function load() {
   try {
@@ -245,13 +250,32 @@ function startEdit(id) {
 function deleteProduct(id) {
   const p = productos.find((x) => x.id === id);
   if (!p) return;
-  if (!confirm('¿Desea eliminar el producto "' + p.nombre + '"?')) return;
+  confirmPendingId = id;
+  confirmText.textContent = '¿Desea eliminar el producto "' + p.nombre + '"? Esta acción no se puede deshacer.';
+  confirmModal.hidden = false;
+}
 
-  productos = productos.filter((x) => x.id !== id);
+confirmOk.addEventListener('click', () => {
+  if (!confirmPendingId) return;
+  productos = productos.filter((x) => x.id !== confirmPendingId);
+  confirmPendingId = null;
+  confirmModal.hidden = true;
   persist();
   render();
   showToast('Producto eliminado.', 'success');
-}
+});
+
+confirmCancel.addEventListener('click', () => {
+  confirmPendingId = null;
+  confirmModal.hidden = true;
+});
+
+confirmModal.addEventListener('click', (e) => {
+  if (e.target === confirmModal) {
+    confirmPendingId = null;
+    confirmModal.hidden = true;
+  }
+});
 
 function buyProduct(p) {
   const qty = p._buyQty || 1;
