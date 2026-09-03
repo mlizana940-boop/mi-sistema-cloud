@@ -3,8 +3,10 @@ const STORAGE_KEY = 'productos';
 let productos = [];
 let editingId = null;
 let searchTerm = '';
+let stockFilter = 'all';
 
 const searchInput = document.getElementById('search');
+const filterSelect = document.getElementById('filter-stock');
 
 const form = document.getElementById('product-form');
 const formTitle = document.getElementById('form-title');
@@ -61,11 +63,18 @@ function renderStats() {
   document.getElementById('stat-value').textContent = formatPrecio(value);
 }
 
+function matchesFilters(p) {
+  const matchesSearch = p.nombre.toLowerCase().includes(searchTerm.toLowerCase());
+  if (!matchesSearch) return false;
+  if (stockFilter === 'available') return p.stock > 0;
+  if (stockFilter === 'low') return p.stock > 0 && p.stock <= 5;
+  if (stockFilter === 'out') return p.stock <= 0;
+  return true;
+}
+
 function renderProducts() {
   tbody.innerHTML = '';
-  const filtered = productos.filter((p) =>
-    p.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filtered = productos.filter(matchesFilters);
   if (filtered.length === 0) {
     tbody.innerHTML = '<tr><td colspan="5" class="empty">No hay productos registrados' +
       (searchTerm ? ' que coincidan con la búsqueda.' : '.') + '</td></tr>';
@@ -261,6 +270,11 @@ cancelBtn.addEventListener('click', resetForm);
 
 searchInput.addEventListener('input', () => {
   searchTerm = searchInput.value.trim();
+  renderProducts();
+});
+
+filterSelect.addEventListener('change', () => {
+  stockFilter = filterSelect.value;
   renderProducts();
 });
 

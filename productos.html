@@ -63,7 +63,15 @@
   <section class="panel">
     <div class="panel-head">
       <h2>Lista de Productos</h2>
-      <input type="search" id="search" class="search-input" placeholder="Buscar por nombre...">
+      <div class="filters">
+        <select id="filter-stock" class="search-input">
+          <option value="all">Todos los productos</option>
+          <option value="available">Con stock</option>
+          <option value="low">Stock bajo (≤ 5)</option>
+          <option value="out">Agotados</option>
+        </select>
+        <input type="search" id="search" class="search-input" placeholder="Buscar por nombre...">
+      </div>
     </div>
     <div class="table-wrap">
       <table class="data-table">
