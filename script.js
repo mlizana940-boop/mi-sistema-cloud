@@ -46,7 +46,7 @@ function persist() {
 }
 
 function formatPrecio(value) {
-  return '$' + Number(value).toLocaleString('es-CL');
+  return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(value);
 }
 
 function showToast(message, type) {
@@ -203,13 +203,14 @@ form.addEventListener('submit', (e) => {
 
   const nombre = nombreInput.value.trim();
   const stock = Number(stockInput.value);
-  const precio = Number(precioInput.value);
+  const precio = Math.round(Number(precioInput.value));
   const descripcion = descripcionInput.value.trim();
 
   if (!nombre || stock < 0 || isNaN(precio) || precio <= 0 || !descripcion) {
     showToast('Revise los datos: nombre, stock y descripción son obligatorios y el precio debe ser mayor a 0.', 'error');
     return;
   }
+  precioInput.value = precio;
 
   if (editingId) {
     const p = productos.find((x) => x.id === editingId);
