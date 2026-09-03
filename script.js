@@ -81,14 +81,36 @@ function renderProducts() {
 }
 
 function renderSummary() {
+  const totals = summaryTbody.querySelector('.summary-total');
+  if (totals) totals.remove();
   summaryTbody.innerHTML = '';
   if (productos.length === 0) {
-    summaryTbody.innerHTML = '<tr><td colspan="3" class="empty">No hay productos para resumir.</td></tr>';
+    summaryTbody.innerHTML = '<tr><td colspan="4" class="empty">No hay productos para resumir.</td></tr>';
     return;
   }
 
   productos.forEach((p) => {
     const tr = document.createElement('tr');
+
+    const minusBtn = document.createElement('button');
+    minusBtn.className = 'btn qty-btn';
+    minusBtn.textContent = '−';
+    minusBtn.onclick = () => adjustBuyQty(p.id, -1);
+
+    const plusBtn = document.createElement('button');
+    plusBtn.className = 'btn qty-btn';
+    plusBtn.textContent = '+';
+    plusBtn.onclick = () => adjustBuyQty(p.id, 1);
+
+    const qtySpan = document.createElement('span');
+    qtySpan.className = 'qty-num';
+    qtySpan.id = 'qty-' + p.id;
+    qtySpan.textContent = '1';
+    if (!p._buyQty) p._buyQty = 1;
+
+    const tdQty = document.createElement('td');
+    tdQty.className = 'qty-cell';
+    tdQty.append(minusBtn, qtySpan, plusBtn);
 
     const btnBuy = document.createElement('button');
     btnBuy.className = 'btn small';
@@ -98,13 +120,26 @@ function renderSummary() {
     const tdBuy = document.createElement('td');
     tdBuy.appendChild(btnBuy);
 
-    tr.innerHTML = `
-      <td>${escapeHtml(p.nombre)}</td>
-      <td>${p.stock}</td>
-    `;
+    const stockCell = document.createElement('td');
+    stockCell.className = p.stock <= 0 ? 'stock-badge out' : (p.stock <= 5 ? 'stock-badge low' : 'stock-badge ok');
+    stockCell.textContent = p.stock;
+
+    tr.innerHTML = `<td>${escapeHtml(p.nombre)}</td>`;
+    tr.appendChild(stockCell);
+    tr.appendChild(tdQty);
     tr.appendChild(tdBuy);
     summaryTbody.appendChild(tr);
   });
+}
+
+function adjustBuyQty(id, delta) {
+  const p = productos.find((x) => x.id === id);
+  if (!p) return;
+  p._buyQty = (p._buyQty || 1) + delta;
+  if (p._buyQty < 1) p._buyQty = 1;
+  if (p._buyQty > 99) p._buyQty = 99;
+  const span = document.getElementById('qty-' + id);
+  if (span) span.textContent = p._buyQty;
 }
 
 function escapeHtml(text) {
@@ -188,14 +223,16 @@ function deleteProduct(id) {
 }
 
 function buyProduct(p) {
-  if (p.stock <= 0) {
-    showToast('Error: Stock insuficiente para comprar "' + p.nombre + '".', 'error');
+  const qty = p._buyQty || 1;
+  if (p.stock <= 0 || qty > p.stock) {
+    showToast('Error: Stock insuficiente para comprar ' + qty + ' unidad(es) de "' + p.nombre + '". Stock disponible: ' + p.stock + '.', 'error');
     return;
   }
-  p.stock -= 1;
+  p.stock -= qty;
+  p._buyQty = 1;
   persist();
   render();
-  showToast('Has comprado 1 unidad de "' + p.nombre + '". Stock restante: ' + p.stock + '.', 'success');
+  showToast('Has comprado ' + qty + ' unidad(es) de "' + p.nombre + '". Stock restante: ' + p.stock + '.', 'success');
 }
 
 cancelBtn.addEventListener('click', resetForm);
