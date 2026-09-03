@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestión de Productos</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="app-page">
+
+<main class="app">
+  <header class="app-header">
+    <a href="index.html" class="back-link">&larr; Volver al inicio</a>
+    <h1>Gestión de Productos</h1>
+  </header>
+
+  <section class="panel">
+    <h2 id="form-title">Nuevo Producto</h2>
+    <form id="product-form" class="product-form">
+      <input type="hidden" id="product-id">
+      <div class="field">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" required>
+      </div>
+      <div class="field">
+        <label for="stock">Stock</label>
+        <input type="number" id="stock" min="0" required>
+      </div>
+      <div class="field">
+        <label for="precio">Precio (CLP)</label>
+        <input type="number" id="precio" min="0" step="0.01" required>
+      </div>
+      <div class="field">
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" rows="3" required></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn primary" id="save-btn">Guardar Producto</button>
+        <button type="button" class="btn ghost" id="cancel-btn" hidden>Cancelar edición</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2>Lista de Productos</h2>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Stock</th>
+            <th>Precio</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="product-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Resumen de Productos</h2>
+    <div class="table-wrap">
+      <table class="data-table summary">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Stock Disponible</th>
+            <th>Comprar</th>
+          </tr>
+        </thead>
+        <tbody id="summary-tbody"></tbody>
+      </table>
+    </div>
+    <p class="hint">Haz clic en "Comprar" para descontar una unidad. Si el stock es insuficiente aparece un mensaje de error.</p>
+  </section>
+
+  <div id="toast" class="toast" hidden></div>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
